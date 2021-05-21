@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ShowAllFiles>true</ShowAllFiles>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Update="Add_Client_form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Add_Distributor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Add_Drink.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Add_Invoice.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Edit_Distributor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Edit_Drink.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Edit_Invoice_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Edit_Invoice_Item.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Add_InvoiceItem1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Edit_Client_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Print_Invoice.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+</Project>
