@@ -16,7 +16,6 @@ namespace BevarageShop
             InitializeComponent();
         }
 
-
         private void Client_add_btn_Click(object sender, EventArgs e)
         {
             Database database = new Database();
@@ -34,9 +33,7 @@ namespace BevarageShop
             }catch(Exception ee)
             {
                 Status_label.Text = "Error! Try again";
-                Status_label.BackColor = Color.Red;
-                
-            
+                Status_label.BackColor = Color.Red;   
             }
             if(result == 0)
             {

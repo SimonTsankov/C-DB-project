@@ -36,8 +36,12 @@ namespace BevarageShop
             this.add_btn = new System.Windows.Forms.Button();
             this.del_btn = new System.Windows.Forms.Button();
             this.Debuging_label = new System.Windows.Forms.Label();
-            this.print_btn = new System.Windows.Forms.Button();
             this.edit_btn = new System.Windows.Forms.Button();
+            this.sql_text_field = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.executeSQL_btn = new System.Windows.Forms.Button();
+            this.queryStatus = new System.Windows.Forms.Label();
+            this.openFile_btn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -49,9 +53,8 @@ namespace BevarageShop
             this.dataGridView1.Location = new System.Drawing.Point(39, 125);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 25;
-            this.dataGridView1.Size = new System.Drawing.Size(661, 283);
+            this.dataGridView1.Size = new System.Drawing.Size(614, 283);
             this.dataGridView1.TabIndex = 0;
-            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // refresh_btn
             // 
@@ -107,18 +110,6 @@ namespace BevarageShop
             this.Debuging_label.Size = new System.Drawing.Size(0, 15);
             this.Debuging_label.TabIndex = 5;
             // 
-            // print_btn
-            // 
-            this.print_btn.Location = new System.Drawing.Point(676, 96);
-            this.print_btn.Name = "print_btn";
-            this.print_btn.Size = new System.Drawing.Size(88, 23);
-            this.print_btn.TabIndex = 6;
-            this.print_btn.Text = " Print Invoice";
-            this.print_btn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.print_btn.UseVisualStyleBackColor = true;
-            this.print_btn.Visible = false;
-            this.print_btn.Click += new System.EventHandler(this.button1_Click);
-            // 
             // edit_btn
             // 
             this.edit_btn.Location = new System.Drawing.Point(676, 45);
@@ -129,21 +120,77 @@ namespace BevarageShop
             this.edit_btn.UseVisualStyleBackColor = true;
             this.edit_btn.Click += new System.EventHandler(this.edit_btn_Click);
             // 
+            // sql_text_field
+            // 
+            this.sql_text_field.AcceptsTab = true;
+            this.sql_text_field.Location = new System.Drawing.Point(676, 158);
+            this.sql_text_field.Multiline = true;
+            this.sql_text_field.Name = "sql_text_field";
+            this.sql_text_field.Size = new System.Drawing.Size(187, 136);
+            this.sql_text_field.TabIndex = 8;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(676, 125);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(78, 15);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Execute SQL: ";
+            // 
+            // executeSQL_btn
+            // 
+            this.executeSQL_btn.Location = new System.Drawing.Point(768, 301);
+            this.executeSQL_btn.Name = "executeSQL_btn";
+            this.executeSQL_btn.Size = new System.Drawing.Size(75, 23);
+            this.executeSQL_btn.TabIndex = 10;
+            this.executeSQL_btn.Text = "Execute";
+            this.executeSQL_btn.UseVisualStyleBackColor = true;
+            this.executeSQL_btn.Click += new System.EventHandler(this.executeSQL_btn_Click);
+            // 
+            // queryStatus
+            // 
+            this.queryStatus.AutoSize = true;
+            this.queryStatus.Location = new System.Drawing.Point(676, 350);
+            this.queryStatus.Name = "queryStatus";
+            this.queryStatus.Size = new System.Drawing.Size(0, 15);
+            this.queryStatus.TabIndex = 11;
+            // 
+            // openFile_btn
+            // 
+            this.openFile_btn.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.openFile_btn.Location = new System.Drawing.Point(676, 300);
+            this.openFile_btn.Name = "openFile_btn";
+            this.openFile_btn.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.openFile_btn.Size = new System.Drawing.Size(86, 24);
+            this.openFile_btn.TabIndex = 12;
+            this.openFile_btn.Text = "Open sql file";
+            this.openFile_btn.UseVisualStyleBackColor = true;
+            this.openFile_btn.Click += new System.EventHandler(this.openFile_btn_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.ClientSize = new System.Drawing.Size(875, 450);
+            this.Controls.Add(this.openFile_btn);
+            this.Controls.Add(this.queryStatus);
+            this.Controls.Add(this.executeSQL_btn);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.sql_text_field);
             this.Controls.Add(this.edit_btn);
-            this.Controls.Add(this.print_btn);
             this.Controls.Add(this.Debuging_label);
             this.Controls.Add(this.del_btn);
             this.Controls.Add(this.add_btn);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.refresh_btn);
             this.Controls.Add(this.dataGridView1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "Form1";
+            this.Opacity = 0.01D;
             this.Text = "Beverage Shop";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
@@ -188,8 +235,12 @@ namespace BevarageShop
         private System.Windows.Forms.Button add_btn;
         private System.Windows.Forms.Button del_btn;
         private System.Windows.Forms.Label Debuging_label;
-        private System.Windows.Forms.Button print_btn;
         private System.Windows.Forms.Button edit_btn;
+        private System.Windows.Forms.TextBox sql_text_field;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button executeSQL_btn;
+        private System.Windows.Forms.Label queryStatus;
+        private System.Windows.Forms.Button openFile_btn;
     }
 }
 

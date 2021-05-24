@@ -66,6 +66,7 @@ namespace BevarageShop
             }
             database.CloseConnection();
         }
+
         public class DistributorsClass
         {
             public String name { get; set; }

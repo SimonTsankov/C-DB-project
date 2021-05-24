@@ -23,6 +23,7 @@ namespace BevarageShop
             InitializeComponent();
             //dataGridView1.MultiSelect = false;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView1.ReadOnly = true;
             using (SQLiteConnection c = new SQLiteConnection("Data Source=database.sqlite3"))
             {
                 c.Open();
@@ -38,14 +39,9 @@ namespace BevarageShop
                     }
                 }
             }
-            
-  
             fillDictionaries();
         }
-        public  void refreshData()
-        {
-            refresh_btn.PerformClick();
-        }
+       
         private void refresh_btn_Click(object sender, EventArgs e)
         {
             
@@ -65,8 +61,10 @@ namespace BevarageShop
                     }
                 }
             }
+            dataGridView1.Columns[Table_IDs[table]].DisplayIndex = 0;
             updateTotalCost();
         }
+        #region CostUpdateing
 
         public void updateTotalCost()
         {
@@ -100,6 +98,49 @@ namespace BevarageShop
                
             }
         }
+        public int getTotalCost(string id_invoice)
+        {
+            int total = 0;
+            LinkedList<string> queries = new LinkedList<string>();
+            using (SQLiteConnection c = new SQLiteConnection("Data Source=database.sqlite3"))
+            {
+                c.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand("SELECT id_ivItem FROM InvoiceItem WHERE id_invoice ==" + id_invoice, c))
+                {
+                    using (SQLiteDataReader result_id_invoice = cmd.ExecuteReader())
+                    {
+                        if (result_id_invoice.HasRows)
+                        {
+                            while (result_id_invoice.Read())
+                            {
+                                string query = "SELECT price*(SELECT quantity FROM InvoiceItem WHERE id_ivItem== " + result_id_invoice["id_ivItem"] + ") AS price2 " +
+                                    "FROM Drink WHERE id_drink IN(SELECT id_drink FROM InvoiceItem WHERE id_ivItem== " + result_id_invoice["id_ivItem"] + ")";
+                                queries.AddLast(query);
+                            }
+
+                        }
+                    }
+                }
+            }
+
+            foreach (string query in queries)
+            {
+                using (SQLiteConnection c = new SQLiteConnection("Data Source=database.sqlite3"))
+                {
+                    c.Open();
+                    using (SQLiteCommand cmd = new SQLiteCommand(query, c))
+                    {
+                        using (SQLiteDataReader result_pricesXquantity = cmd.ExecuteReader())
+                        {
+                            result_pricesXquantity.Read();
+
+                            total += Convert.ToInt32(result_pricesXquantity["price2"]);
+                        }
+                    }
+                }
+            }
+            return total;
+        }
         public void setTotalCost(string id, int cost)
         {
             using (SQLiteConnection c = new SQLiteConnection("Data Source=database.sqlite3"))
@@ -111,6 +152,8 @@ namespace BevarageShop
                 }
             }
         }
+
+        #endregion
         private string returnTableName()
         {
             string table = "Client";
@@ -169,6 +212,7 @@ namespace BevarageShop
 
         private void del_btn_Click(object sender, EventArgs e)
         {
+            try { 
             int rowsSelected = dataGridView1.SelectedRows.Count;
             DialogResult dialogResult = MessageBox.Show("Are you sure?", "Delete number of rows: " + dataGridView1.SelectedRows.Count, MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)      
@@ -177,15 +221,22 @@ namespace BevarageShop
                     int selectedrowindex = dataGridView1.SelectedCells[i].RowIndex;
                     DataGridViewRow selectedRow = dataGridView1.Rows[selectedrowindex];
                     int cellValue = Convert.ToInt32(selectedRow.Cells[Table_IDs[returnTableName()]].Value);
-                    try
-                    {
+                        try {
+                            MessageBox.Show(cellValue+"");
                         DeleteRowSQL(cellValue);
-                    }
-                    catch (Exception ee)//crashes if user sele
-                    {
-                    }
+                        }
+                        catch ( Exception eee)
+                        {
+
+                        }
+
+
 
                 }
+            }catch(Exception ee)
+            {
+
+            }
 
         }
         private void DeleteRowSQL(int id)
@@ -211,25 +262,7 @@ namespace BevarageShop
             Table_IDs.Add("InvoiceItem", "id_ivItem");
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            refresh_btn.PerformClick();
-            if (comboBox1.GetItemText(this.comboBox1.SelectedItem).Equals("Invoices"))
-            {
-                print_btn.Visible = true;
-            }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Print_Invoice form = new Print_Invoice();
-            form.Show();
-        }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
+       
 
         public int getSelectedID()
         {
@@ -274,57 +307,94 @@ namespace BevarageShop
                     break;
             }
         }
-
-        private void timer1_Tick(object sender, EventArgs e)
+        public  void ExecuteNonQuerySQL(String query)
         {
-            refresh_btn.PerformClick();
-        }
-
-        public int getTotalCost(string id_invoice)
-        {
-            int total = 0;
-            LinkedList<string> queries = new LinkedList<string>();
-            using (SQLiteConnection c = new SQLiteConnection("Data Source=database.sqlite3"))
-            {
-                c.Open();
-                using (SQLiteCommand cmd = new SQLiteCommand("SELECT id_ivItem FROM InvoiceItem WHERE id_invoice ==" + id_invoice, c))
-                {
-                    using (SQLiteDataReader result_id_invoice = cmd.ExecuteReader())
-                    {
-                        if (result_id_invoice.HasRows)
-                        {
-                           
-                            while (result_id_invoice.Read())
-                            {
-                                string query = "SELECT price*(SELECT quantity FROM InvoiceItem WHERE id_ivItem== " + result_id_invoice["id_ivItem"] + ") AS price2 " +
-                                    "FROM Drink WHERE id_drink IN(SELECT id_drink FROM InvoiceItem WHERE id_ivItem== " + result_id_invoice["id_ivItem"] + ")";
-
-                                queries.AddLast(query);      
-                            }
-                            
-                        }
-                    }
-                }
-            }
-
-            foreach (string query in queries)
+            var rowsAffected=0;
+            try
             {
                 using (SQLiteConnection c = new SQLiteConnection("Data Source=database.sqlite3"))
                 {
                     c.Open();
                     using (SQLiteCommand cmd = new SQLiteCommand(query, c))
                     {
-                        using (SQLiteDataReader result_pricesXquantity = cmd.ExecuteReader())
-                        {
-                            result_pricesXquantity.Read();
+                       
+                       rowsAffected = cmd.ExecuteNonQuery();
+                    }
+                }
+                queryStatus.ForeColor = Color.Black;
+                queryStatus.Text =rowsAffected + " rows affected";
+            }
+            catch(Exception ee)
+            {
+                queryStatus.ForeColor = Color.Red;
+                queryStatus.Text = ee.Message;
+            }
+        }
+        public void ExecuteReturnQuery(String query)
+        {
+            try { 
+            using (SQLiteConnection c = new SQLiteConnection("Data Source=database.sqlite3"))
+            {
+                c.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand(query, c))
+                {
+                    using (SQLiteDataAdapter adapter = new SQLiteDataAdapter(cmd))
+                    {
+                        DataTable dt = new DataTable();
 
-                            total += Convert.ToInt32(result_pricesXquantity["price2"]);
+                        adapter.Fill(dt);
+
+                        dataGridView1.DataSource = dt;
+                    }
+                }
+                    queryStatus.ForeColor = Color.Black;
+                    queryStatus.Text = "";
+            }
+            }catch(Exception ee)
+            {
+                queryStatus.ForeColor = Color.Red;
+                queryStatus.Text = ee.Message;
+            }
+        }
+        private void executeSQL_btn_Click(object sender, EventArgs e)
+        {
+            if (sql_text_field.Text.ToLower().Contains("select") == true)
+            {
+                ExecuteReturnQuery(sql_text_field.Text);
+            }
+            else ExecuteNonQuerySQL(sql_text_field.Text);
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            refresh_btn.PerformClick();
+        }
+
+        private void openFile_btn_Click(object sender, EventArgs e)
+        {
+            var fileContent = string.Empty;
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                
+                openFileDialog.Filter = "SQL files|*.sql";
+                openFileDialog.RestoreDirectory = false;
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    //Get the path of specified file
+                    queryStatus.Text = openFileDialog.FileName;
+                    //Read the contents of the file into a stream
+                    var fileStream = openFileDialog.OpenFile();
+                    using (StreamReader reader = new StreamReader(fileStream))
+                    {
+                        fileContent = reader.ReadToEnd();//sql script
+                        if (fileContent.ToLower().Contains("select") == true)//execution of sql script
+                        {
+                            ExecuteReturnQuery(fileContent);
                         }
+                        else ExecuteNonQuerySQL(fileContent);
                     }
                 }
             }
-            return total;
-            
         }
     }
 }

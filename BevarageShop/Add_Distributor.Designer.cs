@@ -29,6 +29,7 @@ namespace BevarageShop
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Add_Distributor));
             this.id_field = new System.Windows.Forms.TextBox();
             this.phone_filed = new System.Windows.Forms.TextBox();
             this.name_field = new System.Windows.Forms.TextBox();
@@ -118,6 +119,7 @@ namespace BevarageShop
             this.Controls.Add(this.name_field);
             this.Controls.Add(this.phone_filed);
             this.Controls.Add(this.id_field);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Add_Distributor";
             this.Text = "Add_Distributor";
             this.ResumeLayout(false);

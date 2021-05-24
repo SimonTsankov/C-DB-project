@@ -12,7 +12,6 @@ namespace BevarageShop
         public Add_Invoice()
         {
             InitializeComponent();
-
             CB_clients.DataSource = getClientsSQL(database);
             CB_clients.ValueMember = "ID";
             CB_clients.DisplayMember = "name";
@@ -27,7 +26,6 @@ namespace BevarageShop
             string query = "SELECT id_client, name FROM Client;";
             SQLiteCommand myCommand = new SQLiteCommand(query, database.myConnection);
             SQLiteDataReader result = myCommand.ExecuteReader();
-
 
             if (result.HasRows)
             {
@@ -72,24 +70,12 @@ namespace BevarageShop
             }
             database.CloseConnection();
         }
-        public static int id_invoiceValue;
-        private void button1_Click(object sender, EventArgs e)
-        {
-            id_invoiceValue = Int32.Parse(id_invoice.Text);
-            Add_InvoiceItem1 form = new Add_InvoiceItem1();
-            form.ShowDialog();
-        }
-
-        public void updateTotalCost(int totalCost, int id_invoice)
-        {
-
-        }
+        
 
         public int getTotalCost(string id_invoice)
         {
             int total = 0;
             try { 
-           
             Database database = new Database();
             database.OpenConnection();
             SQLiteCommand cmd = new SQLiteCommand("SELECT id_ivItem FROM InvoiceItem WHERE id_invoice ==" + id_invoice, database.myConnection);
